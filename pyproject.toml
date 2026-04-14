@@ -1,0 +1,23 @@
+[project]
+name = "vehicle-stl"
+version = "0.1.0"
+description = "Signal Temporal Logic evaluation with pluggable semantics for PyTorch. Forked from stlcg++."
+readme = "README.md"
+authors = [
+    { name = "Karen Leung", email = "kymleung@uw.edu" },
+    { name = "Gusts Gustavs Grinbergs", email = "ggustavsg@gmail.com" },
+]
+license = "MIT"
+requires-python = ">=3.10,<3.14"
+dependencies = [
+    "torch>=2,<3",
+]
+
+[project.optional-dependencies]
+viz = [
+    "graphviz",
+]
+
+[build-system]
+requires = ["uv_build>=0.9.21,<0.10.0"]
+build-backend = "uv_build"
