@@ -32,7 +32,3 @@ pred = Predicate("x", lambda s: s)
 formula = Always(pred > 0.0, interval=[0, 2], semantics=smooth)
 result = formula(signal)
 ```
-
-## License
-
-MIT (same as upstream stlcg++).
