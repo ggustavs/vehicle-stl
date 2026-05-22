@@ -743,27 +743,14 @@ class Until(STLFormula):
         phi1_masked_signal = torch.where(phi1_mask, signal1_batched, mask_value)
         phi2_masked_signal = torch.where(phi2_mask, signal2_batched, mask_value)
 
-        return disj(
-            torch.stack(
-                [
-                    conj(
-                        torch.stack(
-                            [
-                                conj(s1, dim=0, keepdim=False),
-                                conj(s2, dim=0, keepdim=False),
-                            ],
-                            dim=0,
-                        ),
-                        dim=0,
-                        keepdim=False,
-                    )
-                    for (s1, s2) in zip(phi1_masked_signal, phi2_masked_signal)
-                ],
-                dim=0,
-            ),
-            dim=0,
-            keepdim=False,
-        )
+        # Vectorised over the K switch-points: reduce [K, P, T] along P,
+        # combine, reduce along K. Same fold order as the per-k loop.
+        c1 = conj(phi1_masked_signal, dim=1, keepdim=False)  # [K, T]
+        c2 = conj(phi2_masked_signal, dim=1, keepdim=False)  # [K, T]
+        combined = conj(
+            torch.stack([c1, c2], dim=0), dim=0, keepdim=False
+        )  # [K, T]
+        return disj(combined, dim=0, keepdim=False)  # [T]
 
     def _next_function(self) -> list[object]:
         return [self.subformula1, self.subformula2]
